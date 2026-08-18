@@ -78,7 +78,14 @@
             cursor: pointer;
         }
 
-        .nav-links a:hover, .nav-links a.active {
+        .nav-links a:hover {
+            background: #c0395a;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(192, 57, 90, 0.3);
+        }
+
+        .nav-links a.active {
             background: #c0395a;
             color: white;
             transform: translateY(-2px);
@@ -147,6 +154,9 @@
             font-size: 1.3rem;
             color: #5a3a3a;
             margin-top: 0.5rem;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
         }
 
         .hero .btn-shop {
@@ -161,6 +171,7 @@
             transition: all 0.3s ease;
             cursor: pointer;
             border: none;
+            font-size: 1rem;
         }
 
         .hero .btn-shop:hover {
@@ -721,7 +732,7 @@
     <header class="header">
         <div class="header-content">
             <a href="#" class="logo" onclick="showPage('home')"><span>✦</span> Glow <span>Beauty</span></a>
-            <nav class="nav-links">
+            <nav class="nav-links" id="navLinks">
                 <a href="#" class="active" data-page="home" onclick="showPage('home')">Home</a>
                 <a href="#" data-page="about" onclick="showPage('about')">About</a>
                 <a href="#" data-page="products" onclick="showPage('products')">Products</a>
@@ -1014,11 +1025,18 @@
             try {
                 const saved = localStorage.getItem('glowCart');
                 return saved ? JSON.parse(saved) : [];
-            } catch { return []; }
+            } catch (e) { 
+                console.log('Error loading cart:', e);
+                return []; 
+            }
         }
 
         function saveCart() {
-            localStorage.setItem('glowCart', JSON.stringify(cart));
+            try {
+                localStorage.setItem('glowCart', JSON.stringify(cart));
+            } catch (e) {
+                console.log('Error saving cart:', e);
+            }
             updateCartUI();
         }
 
@@ -1039,7 +1057,15 @@
             if (btn) {
                 const original = btn.textContent;
                 btn.textContent = '✅ Added!';
-                setTimeout(() => { btn.textContent = original; }, 1500);
+                setTimeout(() => { 
+                    if (btn) btn.textContent = original; 
+                }, 1500);
+            }
+            // Show notification
+            const badge = document.getElementById('cartBadge');
+            if (badge) {
+                badge.style.transform = 'scale(1.5)';
+                setTimeout(() => { badge.style.transform = 'scale(1)'; }, 300);
             }
         }
 
@@ -1050,15 +1076,20 @@
         }
 
         function clearCart() {
-            cart = [];
-            saveCart();
-            updateCartUI();
+            if (cart.length === 0) return;
+            if (confirm('Are you sure you want to clear your cart?')) {
+                cart = [];
+                saveCart();
+                updateCartUI();
+            }
         }
 
         function updateCartUI() {
             const badge = document.getElementById('cartBadge');
             const itemsContainer = document.getElementById('cartItems');
             const totalContainer = document.getElementById('cartTotal');
+            
+            if (!badge || !itemsContainer || !totalContainer) return;
             
             const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
             badge.textContent = totalItems;
@@ -1090,29 +1121,55 @@
 
         // ===================== PAGE NAVIGATION =====================
         function showPage(pageName) {
+            // Debug
+            console.log('Showing page:', pageName);
+            
             // Hide all pages
-            document.querySelectorAll('.page').forEach(el => el.classList.remove('active'));
+            const pages = document.querySelectorAll('.page');
+            pages.forEach(el => el.classList.remove('active'));
+            
             // Show target page
             const target = document.getElementById(`page-${pageName}`);
-            if (target) target.classList.add('active');
+            if (target) {
+                target.classList.add('active');
+                console.log('Page found:', pageName);
+            } else {
+                console.error('Page not found:', pageName);
+                // Fallback to home
+                const home = document.getElementById('page-home');
+                if (home) home.classList.add('active');
+                return;
+            }
             
             // Update nav links
-            document.querySelectorAll('.nav-links a').forEach(el => {
+            const navLinks = document.querySelectorAll('.nav-links a');
+            navLinks.forEach(el => {
                 el.classList.remove('active');
-                if (el.dataset.page === pageName) el.classList.add('active');
+                if (el.dataset.page === pageName) {
+                    el.classList.add('active');
+                }
             });
             
-            // Update URL hash
+            // Update URL hash without causing scroll
             if (pageName === 'home') {
-                history.pushState(null, '', '/');
+                if (window.location.hash) {
+                    history.pushState(null, '', '/');
+                }
             } else {
-                history.pushState(null, '', `#${pageName}`);
+                if (window.location.hash !== `#${pageName}`) {
+                    history.pushState(null, '', `#${pageName}`);
+                }
             }
             
             // If products page, render products
-            if (pageName === 'products') renderProducts();
+            if (pageName === 'products') {
+                renderProducts();
+            }
+            
             // If cart page, update cart UI
-            if (pageName === 'cart') updateCartUI();
+            if (pageName === 'cart') {
+                updateCartUI();
+            }
             
             // Scroll to top
             window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -1121,7 +1178,12 @@
         // ===================== RENDER PRODUCTS =====================
         function renderProducts() {
             const grid = document.getElementById('productGrid');
-            if (!grid) return;
+            if (!grid) {
+                console.error('Product grid not found');
+                return;
+            }
+            
+            console.log('Rendering products...');
             
             let html = '';
             products.forEach(p => {
@@ -1137,10 +1199,12 @@
                 `;
             });
             grid.innerHTML = html;
+            console.log('Products rendered:', products.length);
         }
 
         // ===================== FAQ TOGGLE =====================
         function toggleFaq(element) {
+            if (!element) return;
             element.classList.toggle('open');
         }
 
@@ -1148,31 +1212,41 @@
         function handleSubmit(event) {
             event.preventDefault();
             const successMsg = document.getElementById('successMessage');
-            successMsg.classList.add('show');
-            document.getElementById('contactForm').reset();
-            setTimeout(() => {
-                successMsg.classList.remove('show');
-            }, 5000);
+            if (successMsg) {
+                successMsg.classList.add('show');
+                document.getElementById('contactForm').reset();
+                setTimeout(() => {
+                    successMsg.classList.remove('show');
+                }, 5000);
+            }
         }
 
         // ===================== INIT =====================
         function init() {
+            console.log('Initializing Glow Beauty...');
+            
             // Load cart from localStorage
             cart = getCart();
             updateCartUI();
             
             // Check URL hash on load
             const hash = window.location.hash.replace('#', '');
-            if (hash && ['home', 'about', 'products', 'contact', 'faq', 'cart'].includes(hash)) {
+            console.log('Hash on load:', hash);
+            
+            const validPages = ['home', 'about', 'products', 'contact', 'faq', 'cart'];
+            
+            if (hash && validPages.includes(hash)) {
                 showPage(hash);
             } else {
+                // Default to home
                 showPage('home');
             }
             
             // Handle back/forward browser buttons
-            window.addEventListener('popstate', () => {
+            window.addEventListener('popstate', function(e) {
                 const hash = window.location.hash.replace('#', '');
-                if (hash && ['home', 'about', 'products', 'contact', 'faq', 'cart'].includes(hash)) {
+                console.log('Popstate hash:', hash);
+                if (hash && validPages.includes(hash)) {
                     showPage(hash);
                 } else {
                     showPage('home');
@@ -1180,26 +1254,39 @@
             });
             
             // Clear cart button
-            document.getElementById('clearCartBtn')?.addEventListener('click', clearCart);
+            const clearBtn = document.getElementById('clearCartBtn');
+            if (clearBtn) {
+                clearBtn.addEventListener('click', clearCart);
+            }
             
             // Checkout button
-            document.getElementById('checkoutBtn')?.addEventListener('click', () => {
-                if (cart.length === 0) {
-                    alert('Your cart is empty!');
-                    return;
-                }
-                alert('Thank you for your order! (This is a demo)');
-                clearCart();
-            });
+            const checkoutBtn = document.getElementById('checkoutBtn');
+            if (checkoutBtn) {
+                checkoutBtn.addEventListener('click', function() {
+                    if (cart.length === 0) {
+                        alert('Your cart is empty!');
+                        return;
+                    }
+                    alert('Thank you for your order! (This is a demo)');
+                    clearCart();
+                });
+            }
             
             // Render products if products page is visible
-            if (document.getElementById('page-products').classList.contains('active')) {
+            const productsPage = document.getElementById('page-products');
+            if (productsPage && productsPage.classList.contains('active')) {
                 renderProducts();
             }
+            
+            console.log('Glow Beauty initialized!');
         }
 
         // Run on load
-        document.addEventListener('DOMContentLoaded', init);
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', init);
+        } else {
+            init();
+        }
     </script>
 </body>
 </html>
