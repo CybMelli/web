@@ -10,16 +10,15 @@ Allow: /$
 # Sitemap location
 Sitemap: https://glowbeauty.com/sitemap.xml
 
-# Allow crawling of product pages
-Allow: /product/
-Allow: /category/
+# Since this is a single-page app with hash-based routing,
+# we allow all hash-based navigation
+Allow: /#
+Allow: /*#
 
 # Disallow admin and private areas (if any)
 Disallow: /admin/
 Disallow: /private/
 Disallow: /api/
-Disallow: /cart/
-Disallow: /checkout/
 
 # Crawl delay to be gentle on the server
 Crawl-delay: 1

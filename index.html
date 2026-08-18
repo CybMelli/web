@@ -960,4 +960,246 @@
                     <span>Are your products safe for sensitive skin?</span>
                     <span class="arrow">▼</span>
                 </div>
-                <div class="faq-answer">All our products are dermatologist-tested and formulated with gentle, non-irritating ingredients. We avoid common irrit
+                <div class="faq-answer">All our products are dermatologist-tested and formulated with gentle, non-irritating ingredients. We avoid common irritants like fragrance, alcohol, and harsh preservatives.</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-links">
+            <a href="#" onclick="showPage('home')">Home</a>
+            <a href="#" onclick="showPage('about')">About</a>
+            <a href="#" onclick="showPage('products')">Products</a>
+            <a href="#" onclick="showPage('contact')">Contact</a>
+            <a href="#" onclick="showPage('faq')">FAQ</a>
+        </div>
+        <p>&copy; 2026 <span class="heart">❤</span> Glow Beauty — Made with love for beautiful humans</p>
+    </footer>
+
+    <script>
+        // ===================== PRODUCT DATA =====================
+        const products = [
+            { id: 'velvet-rose-lipstick', name: 'Velvet Rose Lipstick', category: 'lipstick', price: 24.99, icon: '💄', rating: '★★★★★' },
+            { id: 'crimson-glow-lipstick', name: 'Crimson Glow Lipstick', category: 'lipstick', price: 24.99, icon: '💋', rating: '★★★★☆' },
+            { id: 'nude-bliss-lipstick', name: 'Nude Bliss Lipstick', category: 'lipstick', price: 22.99, icon: '🌸', rating: '★★★★★' },
+            { id: 'berry-pop-lipstick', name: 'Berry Pop Lipstick', category: 'lipstick', price: 24.99, icon: '🍓', rating: '★★★★☆' },
+            
+            { id: 'luminous-silk-foundation', name: 'Luminous Silk Foundation', category: 'foundation', price: 38.99, icon: '✨', rating: '★★★★★' },
+            { id: 'matte-perfection-foundation', name: 'Matte Perfection Foundation', category: 'foundation', price: 34.99, icon: '🎯', rating: '★★★★☆' },
+            { id: 'skin-tint-foundation', name: 'Skin Tint Foundation', category: 'foundation', price: 29.99, icon: '🌿', rating: '★★★★☆' },
+            { id: 'full-cover-foundation', name: 'Full Cover Foundation', category: 'foundation', price: 36.99, icon: '🛡️', rating: '★★★★★' },
+            
+            { id: 'brightening-wand-concealer', name: 'Brightening Wand Concealer', category: 'concealer', price: 19.99, icon: '🌟', rating: '★★★★★' },
+            { id: 'spot-cover-concealer', name: 'Spot Cover Concealer', category: 'concealer', price: 16.99, icon: '🎯', rating: '★★★★☆' },
+            { id: 'hydra-conceal-concealer', name: 'Hydra Conceal Concealer', category: 'concealer', price: 18.99, icon: '💧', rating: '★★★★☆' },
+            
+            { id: 'sun-kissed-bronzer', name: 'Sun Kissed Bronzer', category: 'bronzer', price: 28.99, icon: '☀️', rating: '★★★★★' },
+            { id: 'golden-sands-bronzer', name: 'Golden Sands Bronzer', category: 'bronzer', price: 26.99, icon: '🏖️', rating: '★★★★☆' },
+            { id: 'matte-bronze-bronzer', name: 'Matte Bronze Bronzer', category: 'bronzer', price: 26.99, icon: '🌄', rating: '★★★★☆' },
+            
+            { id: 'sculpt-stick-contour', name: 'Sculpt Stick Contour', category: 'contour', price: 22.99, icon: '✏️', rating: '★★★★★' },
+            { id: 'powder-contour', name: 'Powder Contour', category: 'contour', price: 24.99, icon: '🧂', rating: '★★★★☆' },
+            { id: 'cool-tone-contour', name: 'Cool Tone Contour', category: 'contour', price: 22.99, icon: '❄️', rating: '★★★★☆' },
+            
+            { id: 'poreless-base-primer', name: 'Poreless Base Primer', category: 'primer', price: 29.99, icon: '🧴', rating: '★★★★★' },
+            { id: 'hydra-glow-primer', name: 'Hydra Glow Primer', category: 'primer', price: 27.99, icon: '💎', rating: '★★★★☆' },
+            { id: 'mattifying-primer', name: 'Mattifying Primer', category: 'primer', price: 27.99, icon: '🎯', rating: '★★★★☆' }
+        ];
+
+        // ===================== CART =====================
+        let cart = [];
+
+        function getCart() {
+            try {
+                const saved = localStorage.getItem('glowCart');
+                return saved ? JSON.parse(saved) : [];
+            } catch { return []; }
+        }
+
+        function saveCart() {
+            localStorage.setItem('glowCart', JSON.stringify(cart));
+            updateCartUI();
+        }
+
+        function addToCart(productId) {
+            const product = products.find(p => p.id === productId);
+            if (!product) return;
+            
+            const existing = cart.find(item => item.id === productId);
+            if (existing) {
+                existing.quantity += 1;
+            } else {
+                cart.push({ ...product, quantity: 1 });
+            }
+            saveCart();
+            updateCartUI();
+            // Show feedback
+            const btn = document.querySelector(`[data-product-id="${productId}"]`);
+            if (btn) {
+                const original = btn.textContent;
+                btn.textContent = '✅ Added!';
+                setTimeout(() => { btn.textContent = original; }, 1500);
+            }
+        }
+
+        function removeFromCart(productId) {
+            cart = cart.filter(item => item.id !== productId);
+            saveCart();
+            updateCartUI();
+        }
+
+        function clearCart() {
+            cart = [];
+            saveCart();
+            updateCartUI();
+        }
+
+        function updateCartUI() {
+            const badge = document.getElementById('cartBadge');
+            const itemsContainer = document.getElementById('cartItems');
+            const totalContainer = document.getElementById('cartTotal');
+            
+            const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+            badge.textContent = totalItems;
+            
+            if (cart.length === 0) {
+                itemsContainer.innerHTML = '<li class="empty-cart">Your bag is empty. Start shopping!</li>';
+                totalContainer.textContent = '$0.00';
+                return;
+            }
+            
+            let html = '';
+            let total = 0;
+            cart.forEach(item => {
+                const itemTotal = item.price * item.quantity;
+                total += itemTotal;
+                html += `
+                    <li>
+                        <span>${item.icon} ${item.name} × ${item.quantity}</span>
+                        <span>
+                            $${itemTotal.toFixed(2)}
+                            <button class="remove-btn" onclick="removeFromCart('${item.id}')">✕</button>
+                        </span>
+                    </li>
+                `;
+            });
+            itemsContainer.innerHTML = html;
+            totalContainer.textContent = `$${total.toFixed(2)}`;
+        }
+
+        // ===================== PAGE NAVIGATION =====================
+        function showPage(pageName) {
+            // Hide all pages
+            document.querySelectorAll('.page').forEach(el => el.classList.remove('active'));
+            // Show target page
+            const target = document.getElementById(`page-${pageName}`);
+            if (target) target.classList.add('active');
+            
+            // Update nav links
+            document.querySelectorAll('.nav-links a').forEach(el => {
+                el.classList.remove('active');
+                if (el.dataset.page === pageName) el.classList.add('active');
+            });
+            
+            // Update URL hash
+            if (pageName === 'home') {
+                history.pushState(null, '', '/');
+            } else {
+                history.pushState(null, '', `#${pageName}`);
+            }
+            
+            // If products page, render products
+            if (pageName === 'products') renderProducts();
+            // If cart page, update cart UI
+            if (pageName === 'cart') updateCartUI();
+            
+            // Scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // ===================== RENDER PRODUCTS =====================
+        function renderProducts() {
+            const grid = document.getElementById('productGrid');
+            if (!grid) return;
+            
+            let html = '';
+            products.forEach(p => {
+                html += `
+                    <div class="product-card">
+                        <span class="product-icon">${p.icon}</span>
+                        <h3>${p.name}</h3>
+                        <div class="sub">${p.category}</div>
+                        <div class="rating">${p.rating}</div>
+                        <div class="price">$${p.price.toFixed(2)}</div>
+                        <button class="btn-add" data-product-id="${p.id}" onclick="addToCart('${p.id}')">Add to Bag</button>
+                    </div>
+                `;
+            });
+            grid.innerHTML = html;
+        }
+
+        // ===================== FAQ TOGGLE =====================
+        function toggleFaq(element) {
+            element.classList.toggle('open');
+        }
+
+        // ===================== CONTACT FORM =====================
+        function handleSubmit(event) {
+            event.preventDefault();
+            const successMsg = document.getElementById('successMessage');
+            successMsg.classList.add('show');
+            document.getElementById('contactForm').reset();
+            setTimeout(() => {
+                successMsg.classList.remove('show');
+            }, 5000);
+        }
+
+        // ===================== INIT =====================
+        function init() {
+            // Load cart from localStorage
+            cart = getCart();
+            updateCartUI();
+            
+            // Check URL hash on load
+            const hash = window.location.hash.replace('#', '');
+            if (hash && ['home', 'about', 'products', 'contact', 'faq', 'cart'].includes(hash)) {
+                showPage(hash);
+            } else {
+                showPage('home');
+            }
+            
+            // Handle back/forward browser buttons
+            window.addEventListener('popstate', () => {
+                const hash = window.location.hash.replace('#', '');
+                if (hash && ['home', 'about', 'products', 'contact', 'faq', 'cart'].includes(hash)) {
+                    showPage(hash);
+                } else {
+                    showPage('home');
+                }
+            });
+            
+            // Clear cart button
+            document.getElementById('clearCartBtn')?.addEventListener('click', clearCart);
+            
+            // Checkout button
+            document.getElementById('checkoutBtn')?.addEventListener('click', () => {
+                if (cart.length === 0) {
+                    alert('Your cart is empty!');
+                    return;
+                }
+                alert('Thank you for your order! (This is a demo)');
+                clearCart();
+            });
+            
+            // Render products if products page is visible
+            if (document.getElementById('page-products').classList.contains('active')) {
+                renderProducts();
+            }
+        }
+
+        // Run on load
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>
