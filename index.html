@@ -611,8 +611,8 @@
         <div class="about-grid">
             <div class="about-text">
                 <h2>Our Story</h2>
-                <p>Founded in 2020, Glow Beauty was born from a simple belief: everyone deserves to feel beautiful in their own skin. We're a team of makeup enthusiasts, chemists, and artists dedicated to creating products that enhance your natural beauty.</p>
-                <p>We source the finest ingredients from around the world and formulate our products with love, care, and scientific precision. Every product is tested on humans (never animals) to ensure safety, performance, and comfort.</p>
+                <p>Founded in <span>2020</span>, <span>Glow Beauty</span> was born from a simple belief: everyone deserves to feel beautiful in their own skin. We're a team of makeup <span>enthusiasts</span>, <span>chemists</span>, and <span>artists</span>artists dedicated to creating products that enhance your natural beauty.</p>
+                <p>We source the <span>finest ingredients</span> from around the world and formulate our products with love, care, and scientific precision. Every product is tested on humans <span>(never animals)</span> to ensure safety, performance, and comfort.</p>
                 <div class="values">
                     <div class="value-item">
                         <div class="icon">💎</div>
@@ -636,55 +636,7 @@
                 ✨<br><span style="font-size:1.2rem; color:#5a3a3a;">Beautiful you</span>
             </div>
         </div>
-    </div>
-
-    <!-- BRANDS PAGE -->
-    <div class="page" id="page-brands">
-        <h2 style="font-size:2.5rem; font-weight:300; text-align:center; color:#3a2323;">Our <strong style="color:#c0395a;">Brands</strong></h2>
-        <p style="text-align:center; color:#7a5a5a; margin-bottom:2rem;">Curated from the best in the beauty industry</p>
-        <div class="brands-grid">
-            <div class="brand-card">
-                <div class="logo-icon">💄</div>
-                <h3>Luxe Lips</h3>
-                <p>Premium lip care & color</p>
-            </div>
-            <div class="brand-card">
-                <div class="logo-icon">✨</div>
-                <h3>Glow Skin</h3>
-                <p>Luminous foundations & bases</p>
-            </div>
-            <div class="brand-card">
-                <div class="logo-icon">🎨</div>
-                <h3>Artistry</h3>
-                <p>Professional concealers & correctors</p>
-            </div>
-            <div class="brand-card">
-                <div class="logo-icon">☀️</div>
-                <h3>Solar Beauty</h3>
-                <p>Bronzers & highlighters</p>
-            </div>
-            <div class="brand-card">
-                <div class="logo-icon">🌀</div>
-                <h3>Sculpt</h3>
-                <p>Contour & define</p>
-            </div>
-            <div class="brand-card">
-                <div class="logo-icon">🧴</div>
-                <h3>Prime</h3>
-                <p>Flawless primers & prep</p>
-            </div>
-            <div class="brand-card">
-                <div class="logo-icon">🌸</div>
-                <h3>Rose & Co.</h3>
-                <p>Natural & organic beauty</p>
-            </div>
-            <div class="brand-card">
-                <div class="logo-icon">🌟</div>
-                <h3>Starlight</h3>
-                <p>High-performance glam</p>
-            </div>
-        </div>
-    </div>
+    </div>      
 
     <!-- PRODUCTS PAGE -->
     <div class="page" id="page-products">
@@ -692,6 +644,102 @@
         <p style="text-align:center; color:#7a5a5a; margin-bottom:2rem;">Shop our complete makeup collection</p>
         <div class="product-grid" id="productGrid">
             <!-- Products injected via JS -->
+        </div>
+    </div>
+
+    <!-- CONTACT PAGE -->
+    <div class="page" id="page-contact">
+        <h2 style="font-size:2.5rem; font-weight:300; text-align:center; color:#3a2323;">Get in <strong style="color:#c0395a;">Touch</strong></h2>
+        <p style="text-align:center; color:#7a5a5a; margin-bottom:2rem;">We'd love to hear from you! Reach out with any questions or feedback.</p>
+        
+        <div class="contact-container">
+            <!-- Contact Info -->
+            <div class="contact-info">
+                <h3>📬 Contact Information</h3>
+                
+                <div class="contact-detail">
+                    <div class="icon">📍</div>
+                    <div class="text">
+                        <h4>Visit Us</h4>
+                        <p>123 Beauty Boulevard<br>New York, NY 10001</p>
+                    </div>
+                </div>
+
+                <div class="contact-detail">
+                    <div class="icon">📞</div>
+                    <div class="text">
+                        <h4>Call Us</h4>
+                        <p><a href="tel:+1234567890">+1 (234) 567-890</a></p>
+                        <p style="font-size:0.8rem; color:#7a5a5a;">Mon-Fri 9am-6pm EST</p>
+                    </div>
+                </div>
+
+                <div class="contact-detail">
+                    <div class="icon">✉️</div>
+                    <div class="text">
+                        <h4>Email Us</h4>
+                        <p><a href="mailto:hello@glowbeauty.com">hello@glowbeauty.com</a></p>
+                        <p style="font-size:0.8rem; color:#7a5a5a;">We respond within 24 hours</p>
+                    </div>
+                </div>
+
+                <div class="contact-detail">
+                    <div class="icon">💬</div>
+                    <div class="text">
+                        <h4>Live Chat</h4>
+                        <p>Available 24/7 on our website</p>
+                    </div>
+                </div>
+
+                <h4 style="margin: 1.5rem 0 0.5rem; color:#3a2323;">Follow Us</h4>
+                <div class="social-links">
+                    <a href="#">📸 Instagram</a>
+                    <a href="#">📘 Facebook</a>
+                    <a href="#">🐦 Twitter</a>
+                    <a href="#">📌 Pinterest</a>
+                    <a href="#">🎵 TikTok</a>
+                </div>
+            </div>
+
+            <!-- Contact Form -->
+            <div class="contact-form">
+                <h3>✉️ Send Us a Message</h3>
+                <form id="contactForm" onsubmit="handleSubmit(event)">
+                    <div class="form-group">
+                        <label for="name">Full Name *</label>
+                        <input type="text" id="name" name="name" placeholder="Enter your full name" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email">Email Address *</label>
+                        <input type="email" id="email" name="email" placeholder="Enter your email address" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="subject">Subject</label>
+                        <select id="subject" name="subject">
+                            <option value="general">General Inquiry</option>
+                            <option value="product">Product Question</option>
+                            <option value="order">Order Issue</option>
+                            <option value="return">Return/Exchange</option>
+                            <option value="collaboration">Collaboration</option>
+                            <option value="feedback">Feedback</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="message">Message *</label>
+                        <textarea id="message" name="message" placeholder="Write your message here..." required></textarea>
+                    </div>
+
+                    <button type="submit" class="btn-submit">Send Message →</button>
+                    
+                    <div class="success-message" id="successMessage">
+                        ✅ Thank you! Your message has been sent. We'll get back to you within 24 hours.
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
 
@@ -711,7 +759,6 @@
                 <button class="btn-add" id="checkoutBtn" style="max-width:200px;">Proceed to Checkout →</button>
             </div>
         </div>
-    </div>
 
     <!-- FAQ PAGE -->
     <div class="page" id="page-faq">
